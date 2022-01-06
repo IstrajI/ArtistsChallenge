@@ -1,0 +1,31 @@
+query Artists {
+  search {
+    artists(query: "John Mayer", first: 10, after: null) {
+      nodes {
+        ...ArtistBasicFragment
+      }
+    }
+  }
+}
+
+query Artist {
+  node(id: "QXJ0aXN0OjE0NGVmNTI1LTg1ZTktNDBjMy04MzM1LTAyYzMyZDA4NjFmMw==") {
+    ...ArtistDetailsFragment
+  }
+}
+
+fragment ArtistDetailsFragment on Artist {
+  id
+  name
+  disambiguation
+  rating {
+    value
+    voteCount
+  }
+}
+
+fragment ArtistBasicFragment on Artist {
+  id
+  name
+  disambiguation
+}
