@@ -1,7 +1,8 @@
-package com.example.android.artistchalenge
+package com.example.android.artistchalenge.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.android.artistchalenge.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

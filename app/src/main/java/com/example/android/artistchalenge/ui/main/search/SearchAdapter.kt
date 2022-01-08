@@ -1,4 +1,4 @@
-package com.example.android.artistchalenge.ui
+package com.example.android.artistchalenge.ui.main.search
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

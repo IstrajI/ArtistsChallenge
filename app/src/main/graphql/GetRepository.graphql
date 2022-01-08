@@ -1,6 +1,6 @@
-query Artists {
+query Artists($query : String!, $first :Int) {
   search {
-    artists(query: "Metallica", first: 10, after: null) {
+    artists(query: $query, first: $first, after: null) {
       nodes {
         ...ArtistBasicFragment
       }
