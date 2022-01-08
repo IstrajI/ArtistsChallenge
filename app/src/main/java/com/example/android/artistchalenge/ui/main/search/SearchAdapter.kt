@@ -3,6 +3,8 @@ package com.example.android.artistchalenge.ui.main.search
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.android.artistchalenge.R
 import com.example.android.artistchalenge.dao.models.Artist
 import com.example.android.artistchalenge.databinding.ItemSearchBinding
 
@@ -29,6 +31,7 @@ class SearchAdapter : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
     inner class SearchViewHolder(private val binding: ItemSearchBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Artist) {
+            Glide.with(binding.root).load(item.image).centerInside().placeholder(R.drawable.ic_search_placeholder).into(binding.searchImage)
             binding.searchName.text = item.name
             binding.searchType.text = item.type
         }

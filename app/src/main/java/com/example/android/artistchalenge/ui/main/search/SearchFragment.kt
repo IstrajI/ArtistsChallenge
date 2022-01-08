@@ -45,6 +45,7 @@ class SearchFragment : Fragment() {
     private fun initResultsList() {
         binding.searchResultList.adapter = artistAdapter
         viewModel.artists.observe(this) {
+            if (it.isNullOrEmpty()) return@observe
             artistAdapter.updateItems(it)
         }
     }
