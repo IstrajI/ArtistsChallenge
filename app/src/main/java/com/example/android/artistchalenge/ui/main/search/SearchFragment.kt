@@ -1,6 +1,8 @@
 package com.example.android.artistchalenge.ui.main.search
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,15 +37,30 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         (activity?.application as ArtistChallengeApplication).getComponent().inject(this)
-        initSearchList()
+
+        initSearchView()
+        initResultsList()
     }
 
-    private fun initSearchList() {
-        binding.searchArtistList.adapter = artistAdapter
-        viewModel.searchArtists("Oasis")
+    private fun initResultsList() {
+        binding.searchResultList.adapter = artistAdapter
         viewModel.artists.observe(this) {
             artistAdapter.updateItems(it)
         }
+    }
+
+    private fun initSearchView() {
+        binding.searchView.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                if (s?.length ?: 0 < 3) return
+                val searchQuery = s.toString()
+                viewModel.searchQuery.value = searchQuery
+                viewModel.searchArtists(searchQuery)
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
     }
 
     override fun onDestroyView() {

@@ -11,6 +11,7 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(private val artistRepository: ArtistRepository): ViewModel() {
 
     val artists = MutableLiveData<List<Artist>>()
+    val searchQuery = MutableLiveData<String>()
 
     fun searchArtists(name: String) {
         viewModelScope.launch {
