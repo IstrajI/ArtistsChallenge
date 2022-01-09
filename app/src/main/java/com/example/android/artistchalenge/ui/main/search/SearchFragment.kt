@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -41,6 +42,7 @@ class SearchFragment : Fragment() {
 
         initSearchView()
         initResultsList()
+        initStates()
     }
 
     private fun initResultsList() {
@@ -72,6 +74,25 @@ class SearchFragment : Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
+    }
+
+    private fun initStates() {
+        viewModel.screenState.observe(this) {
+            when (it) {
+                SearchViewModel.States.LOADING -> {
+                    binding.progressBar.isInvisible = false
+                }
+                SearchViewModel.States.DEFAULT -> {
+                    binding.progressBar.isInvisible = true
+                }
+                SearchViewModel.States.ERROR -> {
+                    binding.progressBar.isInvisible = true
+                }
+                SearchViewModel.States.NO_ARTISTS -> {
+                    binding.progressBar.isInvisible = true
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {
