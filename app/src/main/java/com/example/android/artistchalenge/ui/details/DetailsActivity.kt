@@ -3,6 +3,7 @@ package com.example.android.artistchalenge.ui.details
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.text.HtmlCompat
 import com.bumptech.glide.Glide
 import com.example.android.artistchalenge.R
 import com.example.android.artistchalenge.databinding.ActivityDetailsBinding
@@ -34,7 +35,10 @@ class DetailsActivity : AppCompatActivity() {
             binding.name.text = it.name
             binding.type.text = it.type
             binding.groupMembers.text = it.groupMembers?.joinToString(separator = " ")
-            binding.biography.text = it.biography
+            it.biography?.let { biography ->
+                binding.biography.text =
+                    HtmlCompat.fromHtml(biography, HtmlCompat.FROM_HTML_MODE_COMPACT)
+            }
             binding.listeners.text = it.listeners.toString()
             binding.country.text = it.country
             binding.lifeStart.text = it.lifeStart

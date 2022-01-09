@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.android.artistchalenge.R
 import com.example.android.artistchalenge.databinding.ActivityMainBinding
 import com.example.android.artistchalenge.ui.details.DetailsActivity
-import com.example.android.artistchalenge.ui.main.search.SearchFragment
+import com.google.android.material.tabs.TabLayoutMediator
 
 class MainActivity : AppCompatActivity(), MainActivityNavigationListener {
     private var _binding: ActivityMainBinding? = null
@@ -18,12 +18,19 @@ class MainActivity : AppCompatActivity(), MainActivityNavigationListener {
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val searchFragment = SearchFragment()
-        searchFragment.mainActivityNavigationListener = this
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.fragmentContainer, searchFragment)
-            .commit()
+        initViewPager()
+    }
+
+    private fun initViewPager() {
+        val tabTitles = arrayOf(
+            getString(R.string.mainSearchTabTitle),
+            getString(R.string.mainBookMarkedTabTitle)
+        )
+        binding.viewPager.adapter = MainPagerAdapter(this, this)
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            tab.text = tabTitles[position]
+            binding.viewPager.currentItem = tab.position
+        }.attach()
     }
 
     override fun onActorDetailedClicked(id: String) {
