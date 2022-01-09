@@ -1,14 +1,18 @@
-query Artists($query : String!, $first :Int) {
+query Artists($query : String!, $first :Int, $after :String) {
   search {
-    artists(query: $query, first: $first, after: null) {
+    artists(query: $query, first: $first, after: $after) {
       nodes {
-        ...ArtistBasicFragment
+        ...ArtistModel
+      }
+      pageInfo{
+        endCursor
+        hasNextPage
       }
     }
   }
 }
 
-fragment ArtistBasicFragment on Artist {
+fragment ArtistModel on Artist {
   id
   name
   disambiguation

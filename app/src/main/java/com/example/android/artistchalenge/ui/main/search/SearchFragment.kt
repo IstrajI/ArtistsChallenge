@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.android.artistchalenge.databinding.FragmentSearchBinding
 import com.example.android.artistchalenge.di.ViewModelFactory
 import com.example.android.artistchalenge.ui.ArtistChallengeApplication
@@ -17,7 +19,6 @@ class SearchFragment : Fragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     private val viewModel by viewModels<SearchViewModel> { viewModelFactory }
-
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
@@ -48,6 +49,15 @@ class SearchFragment : Fragment() {
             if (it.isNullOrEmpty()) return@observe
             artistAdapter.updateItems(it)
         }
+
+        binding.searchResultList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val lastVisibleItemPosition =
+                    (binding.searchResultList.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                viewModel.onScrolled(lastVisibleItemPosition)
+            }
+        })
     }
 
     private fun initSearchView() {
@@ -56,7 +66,7 @@ class SearchFragment : Fragment() {
                 if (s?.length ?: 0 < 3) return
                 val searchQuery = s.toString()
                 viewModel.searchQuery.value = searchQuery
-                viewModel.searchArtists(searchQuery)
+                viewModel.onSearchInput(searchQuery)
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}

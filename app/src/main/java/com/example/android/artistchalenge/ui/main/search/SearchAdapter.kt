@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.android.artistchalenge.R
-import com.example.android.artistchalenge.dao.models.Artist
+import com.example.android.artistchalenge.data.models.Artist
 import com.example.android.artistchalenge.databinding.ItemSearchBinding
 
 class SearchAdapter : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {

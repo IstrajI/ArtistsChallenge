@@ -1,4 +1,4 @@
-package com.example.android.artistchalenge.dao.models
+package com.example.android.artistchalenge.data.models
 
 data class Artist(
     val image: String?,
