@@ -12,10 +12,44 @@ query Artists($query : String!, $first :Int, $after :String) {
   }
 }
 
-fragment ArtistModel on Artist {
-  id
+query ArtistDetails($id : MBID!) {
+  lookup{
+    artist(mbid: $id) {
+      ...ArtistModel
+      ...ArtistDetailedModel
+    }
+  }
+}
+
+fragment ArtistDetailedModel on Artist {
   name
   disambiguation
+  discogs{
+    members {
+      name
+    }
+  }
+  theAudioDB {
+    biography
+  }
+  lastFM {
+    biography {
+      summaryHTML
+      contentHTML
+    }
+    listenerCount
+  }
+  country
+  lifeSpan {
+    begin
+    end
+  }
+}
+
+
+fragment ArtistModel on Artist {
+  mbid
+  name
   type
   fanArt {
     backgrounds {
@@ -25,23 +59,12 @@ fragment ArtistModel on Artist {
       url
     }
   }
-  tags {
-    edges {
-      node {
-        count
-      }
-    }
-  }
-  rating {
-    value
-  }
   mediaWikiImages {
     url
   }
   discogs {
     images {
       url
-      type
     }
   }
   lastFM {
@@ -49,16 +72,5 @@ fragment ArtistModel on Artist {
   }
   theAudioDB {
     logo
-  }
-  spotify {
-    genres
-    images {
-      width
-      height
-    }
-  }
-  country
-  area {
-    id
   }
 }

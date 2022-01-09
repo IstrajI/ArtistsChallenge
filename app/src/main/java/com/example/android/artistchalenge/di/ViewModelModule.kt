@@ -1,6 +1,7 @@
 package com.example.android.artistchalenge.di
 
 import androidx.lifecycle.ViewModel
+import com.example.android.artistchalenge.ui.details.DetailsViewModel
 import com.example.android.artistchalenge.ui.main.search.SearchViewModel
 import dagger.Binds
 import dagger.Module
@@ -12,4 +13,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(SearchViewModel::class)
     abstract fun bindSearchViewModel(searchViewModel: SearchViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DetailsViewModel::class)
+    abstract fun bindDetailsViewModel(searchViewModel: DetailsViewModel): ViewModel
 }

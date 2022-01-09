@@ -1,6 +1,8 @@
 package com.example.android.artistchalenge.domain.artist
 
+import app.src.main.graphql.com.example.android.artistchalenge.ArtistDetailsQuery
 import app.src.main.graphql.com.example.android.artistchalenge.ArtistsQuery
+import app.src.main.graphql.com.example.android.artistchalenge.fragment.ArtistDetailedModel
 import app.src.main.graphql.com.example.android.artistchalenge.fragment.ArtistModel
 import com.example.android.artistchalenge.data.models.Artist
 import com.example.android.artistchalenge.data.repositories.Response
@@ -24,6 +26,15 @@ class ArtistInteractor @Inject constructor(private val artistRepository: ArtistR
         return mapArtistsNodeToArtist(artistsData)
     }
 
+    suspend fun loadDetailArtistInfo(id: String): Artist? {
+        return when (val response = artistRepository.loadDetailArtistInfo(id)) {
+            is Response.SuccessResponse -> {
+                return mapArtistDetailsResponseToArtist(response.data)
+            }
+            is Response.ErrorResponse -> null
+        }
+    }
+
     private suspend fun loadArtistNodes(
         name: String,
         lastPageId: String? = null
@@ -44,11 +55,29 @@ class ArtistInteractor @Inject constructor(private val artistRepository: ArtistR
         }
     }
 
+    private fun mapArtistDetailsResponseToArtist(artistDetailsResponse: ArtistDetailsQuery.Artist): Artist {
+        return artistDetailsResponse.let {
+            Artist(
+                id = it.artistModel.mbid as String?,
+                image = getLogoUrl(it.artistModel),
+                name = it.artistModel.name,
+                type = it.artistModel.type,
+                groupMembers = getGroupMembers(it.artistDetailedModel),
+                biography = getBiography(it.artistDetailedModel),
+                listeners = it.artistDetailedModel.lastFM?.listenerCount,
+                country = it.artistDetailedModel.country,
+                lifeStart = it.artistDetailedModel.lifeSpan?.begin as String?,
+                lifeEnd = it.artistDetailedModel.lifeSpan?.end as String?
+            )
+        }
+    }
+
     private fun mapArtistsNodeToArtist(artistsNodes: List<ArtistsQuery.Node?>?): List<Artist> {
         if (artistsNodes == null) return emptyList()
         return artistsNodes.filterNotNull()
             .map {
                 Artist(
+                    id = it.artistModel.mbid as String?,
                     name = it.artistModel.name,
                     type = it.artistModel.type,
                     image = getLogoUrl(it.artistModel)
@@ -56,26 +85,35 @@ class ArtistInteractor @Inject constructor(private val artistRepository: ArtistR
             }
     }
 
+    private fun getGroupMembers(artist: ArtistDetailedModel): List<String>? {
+        return artist.discogs?.members?.map { member ->
+            member.name
+        }
+    }
+
+    private fun getBiography(artist: ArtistDetailedModel): String? {
+        val audioDbBiography = artist.theAudioDB?.biography
+        val lastFmSummary = artist.lastFM?.biography?.summaryHTML
+        val lastFmBiography = artist.lastFM?.biography?.contentHTML
+        return when {
+            audioDbBiography != null -> audioDbBiography
+            lastFmSummary != null -> lastFmSummary
+            lastFmBiography != null -> lastFmBiography
+            else -> null
+        }
+    }
+
     private fun getLogoUrl(artist: ArtistModel): String? {
-        val discogsImagesList = artist.discogs?.images
-        val audioDbImage = artist.theAudioDB?.logo
-        val fanArtLogoImagesList = artist.fanArt?.logos
-        val fanArtBackgroundImagesList = artist.fanArt?.backgrounds
+        val discogsImage = artist.discogs?.images?.elementAtOrNull(0)?.url as String?
+        val audioDbImage = artist.theAudioDB?.logo as String?
+        val fanArtLogo = artist.fanArt?.logos?.elementAtOrNull(0)?.url as String?
+        val fanArtBackground = artist.fanArt?.backgrounds?.elementAtOrNull(0)?.url as String?
 
         return when {
-            !discogsImagesList.isNullOrEmpty() -> {
-                (discogsImagesList[0].url as String)
-            }
-            audioDbImage != null -> {
-                (audioDbImage as String)
-            }
-            !fanArtLogoImagesList.isNullOrEmpty() && fanArtLogoImagesList[0]?.url != null -> {
-                (fanArtLogoImagesList[0]?.url as String)
-            }
-            !fanArtBackgroundImagesList.isNullOrEmpty() &&
-                    fanArtBackgroundImagesList[0]?.url != null -> {
-                (fanArtBackgroundImagesList[0]?.url as String)
-            }
+            !discogsImage.isNullOrEmpty() -> discogsImage
+            !audioDbImage.isNullOrEmpty() -> audioDbImage
+            !fanArtLogo.isNullOrEmpty() -> fanArtLogo
+            !fanArtBackground.isNullOrEmpty() -> fanArtBackground
             else -> null
         }
     }

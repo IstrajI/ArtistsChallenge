@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.android.artistchalenge.databinding.FragmentSearchBinding
 import com.example.android.artistchalenge.di.ViewModelFactory
 import com.example.android.artistchalenge.ui.ArtistChallengeApplication
+import com.example.android.artistchalenge.ui.main.MainActivityNavigationListener
 import javax.inject.Inject
 
 class SearchFragment : Fragment() {
@@ -24,7 +25,9 @@ class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
-    private val artistAdapter = SearchAdapter()
+    var mainActivityNavigationListener: MainActivityNavigationListener? = null
+
+    lateinit var artistAdapter: SearchAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,12 +43,14 @@ class SearchFragment : Fragment() {
 
         (activity?.application as ArtistChallengeApplication).getComponent().inject(this)
 
-        initSearchView()
         initResultsList()
+        initSearchView()
         initStates()
     }
 
     private fun initResultsList() {
+        artistAdapter = SearchAdapter()
+        artistAdapter.clickListener = mainActivityNavigationListener
         binding.searchResultList.adapter = artistAdapter
         viewModel.artists.observe(this) {
             if (it.isNullOrEmpty()) return@observe
