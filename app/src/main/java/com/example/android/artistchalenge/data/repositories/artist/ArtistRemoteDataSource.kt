@@ -5,7 +5,7 @@ import app.src.main.graphql.com.example.android.artistchalenge.ArtistsQuery
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.exception.ApolloException
-import com.example.android.artistchalenge.data.repositories.Response
+import com.example.android.artistchalenge.data.repositories.NetworkErrorException
 import javax.inject.Inject
 
 class ArtistRemoteDataSource @Inject constructor(private val api: ApolloClient) {
@@ -14,8 +14,8 @@ class ArtistRemoteDataSource @Inject constructor(private val api: ApolloClient) 
         name: String,
         lastArtistSearchPageId: String?,
         amount: Int?
-    ): Response<ArtistsQuery.Artists> {
-        return try {
+    ): ArtistsQuery.Artists {
+        try {
             val response = api.query(
                 ArtistsQuery(
                     query = name,
@@ -23,32 +23,20 @@ class ArtistRemoteDataSource @Inject constructor(private val api: ApolloClient) 
                     after = Optional.presentIfNotNull(lastArtistSearchPageId)
                 )
             ).execute()
-            val artistsResponse = response.data?.search?.artists
-            return if (artistsResponse != null) {
-                Response.SuccessResponse(artistsResponse)
-            } else {
-                Response.ErrorResponse("error")
-            }
+            return response.dataAssertNoErrors.search?.artists
+                ?: throw NetworkErrorException("empty result")
         } catch (exception: ApolloException) {
-            Response.ErrorResponse(exception.message ?: "error")
+            throw NetworkErrorException(exception.localizedMessage)
         }
     }
 
-    suspend fun loadDetailArtistInfo(artistId: String): Response<ArtistDetailsQuery.Artist> {
-        return try {
-            val response = api.query(
-                ArtistDetailsQuery(
-                    id = artistId
-                )
-            ).execute()
-            val artistsResponse = response.data?.lookup?.artist
-            return if (artistsResponse != null) {
-                Response.SuccessResponse(artistsResponse)
-            } else {
-                Response.ErrorResponse("error")
-            }
+    suspend fun loadDetailArtistInfo(artistId: String): ArtistDetailsQuery.Artist {
+        try {
+            val response = api.query(ArtistDetailsQuery(id = artistId)).execute()
+            return response.dataAssertNoErrors.lookup?.artist
+                ?: throw NetworkErrorException("empty result")
         } catch (exception: ApolloException) {
-            Response.ErrorResponse(exception.message ?: "error")
+            throw NetworkErrorException(exception.localizedMessage)
         }
     }
 }

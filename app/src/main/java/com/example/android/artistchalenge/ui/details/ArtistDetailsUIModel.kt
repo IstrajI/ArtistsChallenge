@@ -7,5 +7,5 @@ data class ArtistDetailsUIModel(
     val info: String? = null,
     val groupMembers: String? = null,
     val biography: String? = null,
-    val isBookmarked: Boolean? = false
+    var isBookmarked: Boolean = false
 )

@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.android.artistchalenge.R
 import com.example.android.artistchalenge.data.models.Artist
+import com.example.android.artistchalenge.data.repositories.Outcome
 import com.example.android.artistchalenge.domain.artist.ArtistInteractor
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -14,27 +15,33 @@ import kotlin.math.roundToInt
 class DetailsViewModel @Inject constructor(
     app: Application,
     private val artistInteractor: ArtistInteractor
-) :
-    AndroidViewModel(app) {
+) : AndroidViewModel(app) {
     private val resources = getApplication<Application>().resources!!
-    val artist = MutableLiveData<Artist>()
     val artistUIModel = MutableLiveData<ArtistDetailsUIModel>()
+    var artist: Artist? = null
 
-    fun loadArtistDetails(artistId: String?) {
-        artistId ?: return
+    fun loadArtistDetails(artistId: String) {
         viewModelScope.launch {
-            val artistDetails = artistInteractor.loadDetailArtistInfo(artistId)
-            artistDetails?.let {
-                artistUIModel.value = ArtistDetailsUIModel(
-                    name = it.name,
-                    image = it.image,
-                    description = it.type,
-                    info = formatDescription(it),
-                    groupMembers = formatGroupMembers(it.groupMembers),
-                    biography = it.biography,
-                    isBookmarked = false
-                )
+            when (val artistDetailsOutcome = artistInteractor.loadDetailArtistInfo(artistId)) {
+                is Outcome.SuccessOutcome -> {
+                    artist = artistDetailsOutcome.data
+                    artistDetailsOutcome.data.let {
+                        artistUIModel.value = ArtistDetailsUIModel(
+                            name = it.name,
+                            image = it.image,
+                            description = it.type,
+                            info = formatDescription(it),
+                            groupMembers = formatGroupMembers(it.groupMembers),
+                            biography = it.biography,
+                            isBookmarked = it.isBookmarked,
+                        )
+                    }
+                }
+                else -> {
+                    //show empty state
+                }
             }
+
         }
     }
 
@@ -55,7 +62,7 @@ class DetailsViewModel @Inject constructor(
 
     private fun formatListeners(lastFmListeners: Double?): String? {
         val listenersTitle = resources.getString(R.string.detailsListenersLastFmTitle)
-        return lastFmListeners?.let {"${lastFmListeners.roundToInt()} $listenersTitle"}
+        return lastFmListeners?.let { "${lastFmListeners.roundToInt()} $listenersTitle" }
     }
 
     private fun formatDates(begin: String?, end: String?): String? {
@@ -68,8 +75,16 @@ class DetailsViewModel @Inject constructor(
     }
 
     fun onBookmarkClicked() {
+        val isBookmarked = artistUIModel.value?.isBookmarked ?: return
+        artistUIModel.value?.isBookmarked = isBookmarked.not()
+        artistUIModel.value = artistUIModel.value
+
         viewModelScope.launch {
-            artist.value?.let { artistInteractor.saveArtistBookmark(it) }
+            if (artistUIModel.value?.isBookmarked!!) {
+                artistInteractor.saveArtistBookmark(artist!!)
+            } else {
+                artistInteractor.removeArtistBookmark(artist?.bookmarkId!!)
+            }
         }
     }
 }

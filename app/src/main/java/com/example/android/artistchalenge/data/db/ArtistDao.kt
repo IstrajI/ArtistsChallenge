@@ -15,6 +15,9 @@ interface ArtistDao {
     @Insert
     fun insert(artist: ArtistDBModel)
 
+    @Query("DELETE FROM artist WHERE id = :bookmarkId")
+    fun deleteById(bookmarkId: Long)
+
     @Delete
     fun delete(artist: ArtistDBModel)
 }

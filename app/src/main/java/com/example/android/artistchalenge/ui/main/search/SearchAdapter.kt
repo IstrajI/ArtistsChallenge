@@ -38,8 +38,8 @@ class SearchAdapter : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
             binding.searchName.text = item.name
             binding.searchType.text = item.type
             binding.rootView.setOnClickListener {
-                if (clickListener == null || item.id == null) return@setOnClickListener
-                clickListener!!.onActorDetailedClicked(item.id)
+                if (clickListener == null || item.mbidId == null) return@setOnClickListener
+                clickListener!!.onActorDetailedClicked(item.mbidId)
             }
         }
     }

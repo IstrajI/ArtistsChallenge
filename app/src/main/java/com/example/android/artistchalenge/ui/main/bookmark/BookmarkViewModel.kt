@@ -10,13 +10,13 @@ import javax.inject.Inject
 
 class BookmarkViewModel @Inject constructor(private val artistInteractor: ArtistInteractor) :
     ViewModel() {
-        val bookmarkArtist = MutableLiveData<List<Artist>>()
+    val bookmarkArtist = MutableLiveData<List<Artist>>()
 
-        fun loadBookmarks() {
-            viewModelScope.launch {
-                artistInteractor.loadBookmarkedArtists().collect {
-                    bookmarkArtist.value = it
-                }
+    fun loadBookmarks() {
+        viewModelScope.launch {
+            artistInteractor.loadBookmarkedArtists().collect {
+                bookmarkArtist.value = it
             }
         }
+    }
 }

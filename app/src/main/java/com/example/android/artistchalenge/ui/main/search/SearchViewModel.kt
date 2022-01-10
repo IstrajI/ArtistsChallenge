@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.artistchalenge.data.models.Artist
+import com.example.android.artistchalenge.data.repositories.Outcome
 import com.example.android.artistchalenge.domain.artist.ArtistInteractor
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,7 +19,14 @@ class SearchViewModel @Inject constructor(private val artistInteractor: ArtistIn
 
     fun onSearchInput(name: String) {
         viewModelScope.launch {
-            artists.value = artistInteractor.searchArtists(name)
+            when (val artistsOutcome = artistInteractor.searchArtists(name)) {
+                is Outcome.SuccessOutcome -> {
+                    artists.value = artistsOutcome.data
+                }
+                else -> {
+
+                }
+            }
         }
     }
 
@@ -30,9 +38,17 @@ class SearchViewModel @Inject constructor(private val artistInteractor: ArtistIn
         ) {
             screenState.value = States.LOADING
             viewModelScope.launch {
-                val moreArtists = artistInteractor.loadMoreArtists()
-                artists.value = artists.value!! + moreArtists
+
+                when (val moreArtistsOutcome = artistInteractor.loadMoreArtists()) {
+                    is Outcome.SuccessOutcome -> {
+                        artists.value = artists.value!! + moreArtistsOutcome.data
+                    }
+                    else -> {
+
+                    }
+                }
                 screenState.value = States.DEFAULT
+
             }
         }
     }

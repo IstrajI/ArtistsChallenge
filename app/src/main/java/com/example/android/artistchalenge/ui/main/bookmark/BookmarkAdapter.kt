@@ -40,8 +40,8 @@ class BookmarkAdapter : RecyclerView.Adapter<BookmarkAdapter.BookmarkViewHolder>
                 binding.bookmarkName.text = item.name
                 binding.bookmarkType.text = item.type
                 binding.bookmarkView.setOnClickListener {
-                    if (clickListener == null || item.id == null) return@setOnClickListener
-                    clickListener!!.onActorDetailedClicked(item.id)
+                    if (clickListener == null || item.mbidId == null) return@setOnClickListener
+                    clickListener!!.onActorDetailedClicked(item.mbidId)
                 }
             }
     }

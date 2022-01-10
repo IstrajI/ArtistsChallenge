@@ -10,6 +10,7 @@ import com.example.android.artistchalenge.R
 import com.example.android.artistchalenge.databinding.ActivityDetailsBinding
 import com.example.android.artistchalenge.di.ViewModelFactory
 import com.example.android.artistchalenge.ui.ArtistChallengeApplication
+import com.example.android.artistchalenge.ui.showAndSetOnNotNull
 import javax.inject.Inject
 
 class DetailsActivity : AppCompatActivity() {
@@ -28,35 +29,32 @@ class DetailsActivity : AppCompatActivity() {
 
         (application as ArtistChallengeApplication).getComponent().inject(this)
 
-        viewModel.loadArtistDetails(intent.getStringExtra(DETAILS_ACTIVITY_ARTIST_ID_EXTRA))
+        viewModel.loadArtistDetails(intent.getStringExtra(DETAILS_ACTIVITY_ARTIST_ID_EXTRA)!!)
 
         viewModel.artistUIModel.observe(this) {
             Glide.with(this).load(it.image).centerCrop()
                 .placeholder(R.drawable.ic_actor_placeholder).into(binding.artistImage)
-            it.name?.let { name ->
-                binding.name.isVisible = true
-                binding.name.text = name
-            }
-            it.description?.let { description ->
-                binding.description.isVisible = true
-                binding.description.text = description
-            }
+            binding.name.showAndSetOnNotNull(it.name)
+            binding.description.showAndSetOnNotNull(it.description)
+            binding.biography.showAndSetOnNotNull(it.biography)
             it.biography?.let { biography ->
                 binding.biography.isVisible = true
-                binding.biography.text =
-                    HtmlCompat.fromHtml(biography, HtmlCompat.FROM_HTML_MODE_COMPACT)
+                binding.biography.setText(
+                    HtmlCompat.fromHtml(biography, HtmlCompat.FROM_HTML_MODE_COMPACT))
             }
-            it.groupMembers?.let { groupMembers ->
-                binding.groupMembers.isVisible = true
-                binding.groupMembers.text = groupMembers
-            }
-            it.info?.let { info ->
-                binding.info.isVisible = true
-                binding.info.text = info
-            }
-            binding.bookmarkButton.setOnClickListener {
-                viewModel.onBookmarkClicked()
-            }
+            binding.groupMembers.showAndSetOnNotNull(it.groupMembers)
+            binding.info.showAndSetOnNotNull(it.info)
+
+            bindBookmarkButton(it.isBookmarked)
+
+        }
+    }
+
+    private fun bindBookmarkButton(isBookmarked: Boolean) {
+        val bookmarkImage = if (isBookmarked) R.drawable.ic_bookmark_selected else R.drawable.ic_bookmark_unselected
+        binding.bookmarkButton.setImageResource(bookmarkImage)
+        binding.bookmarkButton.setOnClickListener {
+            viewModel.onBookmarkClicked()
         }
     }
 
