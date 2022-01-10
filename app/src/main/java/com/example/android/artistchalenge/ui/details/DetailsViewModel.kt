@@ -19,4 +19,10 @@ class DetailsViewModel @Inject constructor(private val artistInteractor: ArtistI
             artistDetails?.let { artist.value = it }
         }
     }
+
+    fun onBookmarkClicked() {
+        viewModelScope.launch {
+            artist.value?.let { artistInteractor.saveArtistBookmark(it) }
+        }
+    }
 }

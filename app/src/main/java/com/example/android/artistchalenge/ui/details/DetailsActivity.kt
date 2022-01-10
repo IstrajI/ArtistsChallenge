@@ -43,6 +43,9 @@ class DetailsActivity : AppCompatActivity() {
             binding.country.text = it.country
             binding.lifeStart.text = it.lifeStart
             binding.lifeEnd.text = it.lifeEnd
+            binding.bookmarkButton.setOnClickListener {
+                viewModel.onBookmarkClicked()
+            }
         }
     }
 

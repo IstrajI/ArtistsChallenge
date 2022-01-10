@@ -7,6 +7,9 @@ import app.src.main.graphql.com.example.android.artistchalenge.fragment.ArtistMo
 import com.example.android.artistchalenge.data.models.Artist
 import com.example.android.artistchalenge.data.repositories.Response
 import com.example.android.artistchalenge.data.repositories.artist.ArtistRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class ArtistInteractor @Inject constructor(private val artistRepository: ArtistRepository) {
@@ -32,6 +35,18 @@ class ArtistInteractor @Inject constructor(private val artistRepository: ArtistR
                 return mapArtistDetailsResponseToArtist(response.data)
             }
             is Response.ErrorResponse -> null
+        }
+    }
+
+    suspend fun saveArtistBookmark(artist: Artist) {
+        withContext(Dispatchers.IO) {
+            artistRepository.saveArtist(artist)
+        }
+    }
+
+    suspend fun loadBookmarkedArtists(): Flow<List<Artist>> {
+        return withContext(Dispatchers.IO) {
+            artistRepository.loadBookmarkedArtist()
         }
     }
 
