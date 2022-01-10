@@ -3,29 +3,41 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootView"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingStart="8dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="8dp">
 
     <ImageView
-        android:id="@+id/search_image"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:id="@+id/searchImage"
+        android:layout_width="@dimen/searchLogoSize"
+        android:layout_height="@dimen/searchLogoSize"
+        android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/search_name"
+        android:id="@+id/searchName"
+        style="@style/TextMain"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:lines="1"
+        app:layout_constraintBottom_toTopOf="@+id/searchType"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/search_image"
+        app:layout_constraintStart_toEndOf="@+id/searchImage"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/search_type"
+        android:id="@+id/searchType"
+        style="@style/TextTiny"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:lines="1"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/search_image"
-        app:layout_constraintTop_toBottomOf="@+id/search_name"/>
+        app:layout_constraintStart_toEndOf="@+id/searchImage"
+        app:layout_constraintTop_toBottomOf="@+id/searchName" />
 </androidx.constraintlayout.widget.ConstraintLayout>

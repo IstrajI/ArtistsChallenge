@@ -33,7 +33,7 @@ class SearchAdapter : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
     inner class SearchViewHolder(private val binding: ItemSearchBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Artist) {
-            Glide.with(binding.root).load(item.image).centerInside()
+            Glide.with(binding.root).load(item.image).centerCrop()
                 .placeholder(R.drawable.ic_search_placeholder).into(binding.searchImage)
             binding.searchName.text = item.name
             binding.searchType.text = item.type
