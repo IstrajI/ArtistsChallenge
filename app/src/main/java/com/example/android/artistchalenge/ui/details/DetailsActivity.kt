@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.example.android.artistchalenge.R
 import com.example.android.artistchalenge.databinding.ActivityDetailsBinding
@@ -29,20 +30,30 @@ class DetailsActivity : AppCompatActivity() {
 
         viewModel.loadArtistDetails(intent.getStringExtra(DETAILS_ACTIVITY_ARTIST_ID_EXTRA))
 
-        viewModel.artist.observe(this) {
-            Glide.with(this).load(it.image).centerInside()
+        viewModel.artistUIModel.observe(this) {
+            Glide.with(this).load(it.image).centerCrop()
                 .placeholder(R.drawable.ic_search_placeholder).into(binding.artistImage)
-            binding.name.text = it.name
-            binding.type.text = it.type
-            binding.groupMembers.text = it.groupMembers?.joinToString(separator = " ")
+            it.name?.let { name ->
+                binding.name.isVisible = true
+                binding.name.text = name
+            }
+            it.description?.let { description ->
+                binding.description.isVisible = true
+                binding.description.text = description
+            }
             it.biography?.let { biography ->
+                binding.biography.isVisible = true
                 binding.biography.text =
                     HtmlCompat.fromHtml(biography, HtmlCompat.FROM_HTML_MODE_COMPACT)
             }
-            binding.listeners.text = it.listeners.toString()
-            binding.country.text = it.country
-            binding.lifeStart.text = it.lifeStart
-            binding.lifeEnd.text = it.lifeEnd
+            it.groupMembers?.let { groupMembers ->
+                binding.groupMembers.isVisible = true
+                binding.groupMembers.text = groupMembers
+            }
+            it.info?.let { info ->
+                binding.info.isVisible = true
+                binding.info.text = info
+            }
             binding.bookmarkButton.setOnClickListener {
                 viewModel.onBookmarkClicked()
             }

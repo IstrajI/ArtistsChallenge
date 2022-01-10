@@ -1,8 +1,7 @@
 package com.example.android.artistchalenge.di
 
-import android.content.Context
+import android.app.Application
 import androidx.room.Room
-import androidx.room.RoomDatabase
 import com.apollographql.apollo3.ApolloClient
 import com.example.android.artistchalenge.data.db.AppDatabase
 import dagger.Module
@@ -10,7 +9,13 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class AppModule(private val applicationContext: Context) {
+class AppModule(private val application: Application) {
+    @Provides
+    @Singleton
+    fun provideApplication(): Application {
+        return application
+    }
+
     @Provides
     @Singleton
     fun provideApolloClient(): ApolloClient {
@@ -22,7 +27,7 @@ class AppModule(private val applicationContext: Context) {
     @Provides
     @Singleton
     fun provideRoomDatabase(): AppDatabase {
-        return Room.databaseBuilder(applicationContext, AppDatabase::class.java, DATABASE_NAME)
+        return Room.databaseBuilder(application, AppDatabase::class.java, DATABASE_NAME)
             .build()
     }
 

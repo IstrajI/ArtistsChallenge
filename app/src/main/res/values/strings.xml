@@ -3,4 +3,8 @@
 
     <string name="mainSearchTabTitle">Search</string>
     <string name="mainBookMarkedTabTitle">Bookmarked</string>
+    <string name="dotSpacedSymbolSeparator">\u0020•\u0020</string>
+
+    <string name="detailsListenersLastFmTitle">listeners on lastFm</string>
+    <string name="detailsNowTitle">now</string>
 </resources>
