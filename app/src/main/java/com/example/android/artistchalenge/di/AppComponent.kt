@@ -1,6 +1,6 @@
 package com.example.android.artistchalenge.di
 
-import com.example.android.artistchalenge.ui.bookmark.BookmarkFragment
+import com.example.android.artistchalenge.ui.main.bookmark.BookmarkFragment
 import com.example.android.artistchalenge.ui.details.DetailsActivity
 import com.example.android.artistchalenge.ui.main.search.SearchFragment
 import dagger.Component

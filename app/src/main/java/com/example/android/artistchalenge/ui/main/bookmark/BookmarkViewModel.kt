@@ -1,4 +1,4 @@
-package com.example.android.artistchalenge.ui.bookmark
+package com.example.android.artistchalenge.ui.main.bookmark
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

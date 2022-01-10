@@ -32,7 +32,7 @@ class DetailsActivity : AppCompatActivity() {
 
         viewModel.artistUIModel.observe(this) {
             Glide.with(this).load(it.image).centerCrop()
-                .placeholder(R.drawable.ic_search_placeholder).into(binding.artistImage)
+                .placeholder(R.drawable.ic_actor_placeholder).into(binding.artistImage)
             it.name?.let { name ->
                 binding.name.isVisible = true
                 binding.name.text = name

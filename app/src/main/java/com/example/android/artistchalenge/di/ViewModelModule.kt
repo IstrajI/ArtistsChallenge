@@ -1,7 +1,7 @@
 package com.example.android.artistchalenge.di
 
 import androidx.lifecycle.ViewModel
-import com.example.android.artistchalenge.ui.bookmark.BookmarkViewModel
+import com.example.android.artistchalenge.ui.main.bookmark.BookmarkViewModel
 import com.example.android.artistchalenge.ui.details.DetailsViewModel
 import com.example.android.artistchalenge.ui.main.search.SearchViewModel
 import dagger.Binds
