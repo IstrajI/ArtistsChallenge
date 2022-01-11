@@ -1,4 +1,4 @@
-package com.example.android.artistchalenge.data.models
+package com.example.android.artistchalenge.domain.artist
 
 data class Artist(
     val mbidId: String,

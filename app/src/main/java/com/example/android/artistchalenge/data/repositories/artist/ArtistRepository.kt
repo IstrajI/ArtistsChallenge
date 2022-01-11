@@ -1,10 +1,9 @@
 package com.example.android.artistchalenge.data.repositories.artist
 
-import android.util.Log
 import app.src.main.graphql.com.example.android.artistchalenge.ArtistsQuery
 import app.src.main.graphql.com.example.android.artistchalenge.fragment.ArtistDetailedModel
 import app.src.main.graphql.com.example.android.artistchalenge.fragment.ArtistModel
-import com.example.android.artistchalenge.data.models.Artist
+import com.example.android.artistchalenge.domain.artist.Artist
 import com.example.android.artistchalenge.data.models.ArtistDBModel
 import com.example.android.artistchalenge.data.models.Paginated
 import com.example.android.artistchalenge.data.repositories.EmptyResultException
@@ -16,8 +15,6 @@ class ArtistRepository @Inject constructor(
     private val artistRemoteDataSource: ArtistRemoteDataSource,
     private val artistLocalDataSource: ArtistLocalDataSource
 ) {
-
-
     suspend fun loadArtists(
         name: String,
         lastArtistSearchPageId: String?,

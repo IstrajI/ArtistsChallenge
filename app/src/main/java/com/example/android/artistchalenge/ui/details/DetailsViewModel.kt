@@ -6,15 +6,16 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.android.artistchalenge.R
-import com.example.android.artistchalenge.data.models.Artist
+import com.example.android.artistchalenge.domain.artist.Artist
 import com.example.android.artistchalenge.data.repositories.Outcome
 import com.example.android.artistchalenge.domain.artist.ArtistInteractor
+import com.example.android.artistchalenge.ui.ArtistChallengeApplication
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
 class DetailsViewModel @Inject constructor(
-    val app: Application,
+    app: Application,
     private val artistInteractor: ArtistInteractor
 ) : AndroidViewModel(app) {
     private val resources = getApplication<Application>().resources!!
@@ -42,7 +43,7 @@ class DetailsViewModel @Inject constructor(
                 }
                 is Outcome.ErrorOutcome -> {
                     Toast.makeText(
-                        app.applicationContext,
+                        getApplication<ArtistChallengeApplication>().applicationContext,
                         artistDetailsOutcome.errorMessage,
                         Toast.LENGTH_SHORT
                     ).show()

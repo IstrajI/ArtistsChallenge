@@ -1,6 +1,6 @@
 package com.example.android.artistchalenge.domain.artist
 
-import com.example.android.artistchalenge.data.models.Artist
+import com.example.android.artistchalenge.data.repositories.EmptyResultException
 import com.example.android.artistchalenge.data.repositories.NetworkErrorException
 import com.example.android.artistchalenge.data.repositories.Outcome
 import com.example.android.artistchalenge.data.repositories.artist.ArtistRepository
@@ -40,6 +40,8 @@ class ArtistInteractor @Inject constructor(private val artistRepository: ArtistR
             Outcome.SuccessOutcome(result.data)
         } catch (exception: NetworkErrorException) {
             Outcome.ErrorOutcome(exception.localizedMessage)
+        } catch (exception: EmptyResultException) {
+            Outcome.ErrorOutcome(EMPTY_RESULT)
         }
     }
 
@@ -49,6 +51,8 @@ class ArtistInteractor @Inject constructor(private val artistRepository: ArtistR
             Outcome.SuccessOutcome(response)
         } catch (exception: NetworkErrorException) {
             Outcome.ErrorOutcome(exception.localizedMessage)
+        } catch (exception: EmptyResultException) {
+            Outcome.ErrorOutcome(EMPTY_RESULT)
         }
     }
 
@@ -70,5 +74,6 @@ class ArtistInteractor @Inject constructor(private val artistRepository: ArtistR
 
     companion object {
         const val DEFAULT_ARTISTS_AMOUNT = 15
+        const val EMPTY_RESULT = "empty result"
     }
 }

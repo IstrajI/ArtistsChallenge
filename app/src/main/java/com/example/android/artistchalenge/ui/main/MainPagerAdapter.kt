@@ -7,8 +7,7 @@ import com.example.android.artistchalenge.ui.main.bookmark.BookmarkFragment
 import com.example.android.artistchalenge.ui.main.search.SearchFragment
 
 class MainPagerAdapter(
-    activity: FragmentActivity,
-    private val listener: MainActivityNavigationListener
+    activity: FragmentActivity
 ) : FragmentStateAdapter(activity) {
 
     override fun getItemCount() = NUM_PAGES

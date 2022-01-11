@@ -30,8 +30,11 @@ class DetailsActivity : AppCompatActivity() {
 
         (application as ArtistChallengeApplication).getComponent().inject(this)
 
-        viewModel.loadArtistDetails(intent.getStringExtra(DETAILS_ACTIVITY_ARTIST_ID_EXTRA)!!)
+        setupDetailsData()
+        setupScreenState()
+    }
 
+    private fun setupDetailsData() {
         viewModel.artistUIModel.observe(this) {
             Glide.with(this).load(it.image).centerCrop()
                 .placeholder(R.drawable.ic_actor_placeholder).into(binding.artistImage)
@@ -40,37 +43,39 @@ class DetailsActivity : AppCompatActivity() {
             binding.biography.showAndSetOnNotNull(it.biography)
             it.biography?.let { biography ->
                 binding.biography.isVisible = true
-                binding.biography.setText(
-                    HtmlCompat.fromHtml(biography, HtmlCompat.FROM_HTML_MODE_COMPACT))
+                binding.biography.text = HtmlCompat.fromHtml(biography, HtmlCompat.FROM_HTML_MODE_COMPACT)
             }
             binding.groupMembers.showAndSetOnNotNull(it.groupMembers)
             binding.info.showAndSetOnNotNull(it.info)
 
             bindBookmarkButton(it.isBookmarked)
         }
+        viewModel.loadArtistDetails(intent.getStringExtra(DETAILS_ACTIVITY_ARTIST_ID_EXTRA)!!)
+    }
 
+
+    private fun setupScreenState() {
         viewModel.screenState.observe(this) {
-            viewModel.screenState.observe(this) {
-                when (it) {
-                    States.LOADING -> {
-                        binding.progressBar.isInvisible = false
-                    }
-                    States.DEFAULT -> {
-                        binding.progressBar.isInvisible = true
-                    }
-                    States.ERROR -> {
-                        binding.progressBar.isInvisible = true
-                    }
-                    States.NO_ARTISTS -> {
-                        binding.progressBar.isInvisible = true
-                    }
+            when (it) {
+                States.LOADING -> {
+                    binding.progressBar.isInvisible = false
+                }
+                States.DEFAULT -> {
+                    binding.progressBar.isInvisible = true
+                }
+                States.ERROR -> {
+                    binding.progressBar.isInvisible = true
+                }
+                States.NO_ARTISTS -> {
+                    binding.progressBar.isInvisible = true
                 }
             }
         }
     }
 
     private fun bindBookmarkButton(isBookmarked: Boolean) {
-        val bookmarkImage = if (isBookmarked) R.drawable.ic_bookmark_selected else R.drawable.ic_bookmark_unselected
+        val bookmarkImage =
+            if (isBookmarked) R.drawable.ic_bookmark_selected else R.drawable.ic_bookmark_unselected
         binding.bookmarkButton.setImageResource(bookmarkImage)
         binding.bookmarkButton.isVisible = true
         binding.bookmarkButton.setOnClickListener {

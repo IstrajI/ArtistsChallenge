@@ -2,18 +2,19 @@ package com.example.android.artistchalenge.ui.main.search
 
 import android.app.Application
 import android.widget.Toast
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.android.artistchalenge.data.models.Artist
+import com.example.android.artistchalenge.domain.artist.Artist
 import com.example.android.artistchalenge.data.repositories.Outcome
 import com.example.android.artistchalenge.domain.artist.ArtistInteractor
+import com.example.android.artistchalenge.ui.ArtistChallengeApplication
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(
-    val app: Application, private val artistInteractor: ArtistInteractor
-) : ViewModel() {
+    app: Application, private val artistInteractor: ArtistInteractor
+) : AndroidViewModel(app) {
 
     val artists = MutableLiveData<List<Artist>>()
     val searchQuery = MutableLiveData<String>()
@@ -28,7 +29,7 @@ class SearchViewModel @Inject constructor(
                 }
                 is Outcome.ErrorOutcome -> {
                     Toast.makeText(
-                        app.applicationContext,
+                        getApplication<ArtistChallengeApplication>().applicationContext,
                         artistsOutcome.errorMessage,
                         Toast.LENGTH_SHORT
                     ).show()
@@ -46,14 +47,13 @@ class SearchViewModel @Inject constructor(
         ) {
             screenState.value = States.LOADING
             viewModelScope.launch {
-
                 when (val moreArtistsOutcome = artistInteractor.loadMoreArtists()) {
                     is Outcome.SuccessOutcome -> {
                         artists.value = artists.value!! + moreArtistsOutcome.data
                     }
                     is Outcome.ErrorOutcome -> {
                         Toast.makeText(
-                            app.applicationContext,
+                            getApplication<ArtistChallengeApplication>().applicationContext,
                             moreArtistsOutcome.errorMessage,
                             Toast.LENGTH_SHORT
                         ).show()

@@ -16,7 +16,6 @@ data class ArtistDBModel (
     val name: String? = null,
     @ColumnInfo(name = "type")
     val type: String? = null,
-    //val groupMembers: List<String>? = null,
     @ColumnInfo(name = "biography")
     val biography: String? = null,
     @ColumnInfo(name = "listeners")

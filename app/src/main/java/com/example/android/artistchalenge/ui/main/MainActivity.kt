@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity(), MainActivityNavigationListener {
             getString(R.string.mainSearchTabTitle),
             getString(R.string.mainBookMarkedTabTitle)
         )
-        binding.viewPager.adapter = MainPagerAdapter(this, this)
+        binding.viewPager.adapter = MainPagerAdapter(this)
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = tabTitles[position]
             binding.viewPager.currentItem = tab.position
