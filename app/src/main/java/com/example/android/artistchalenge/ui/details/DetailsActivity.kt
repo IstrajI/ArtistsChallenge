@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.example.android.artistchalenge.R
@@ -46,16 +47,39 @@ class DetailsActivity : AppCompatActivity() {
             binding.info.showAndSetOnNotNull(it.info)
 
             bindBookmarkButton(it.isBookmarked)
+        }
 
+        viewModel.screenState.observe(this) {
+            viewModel.screenState.observe(this) {
+                when (it) {
+                    States.LOADING -> {
+                        binding.progressBar.isInvisible = false
+                    }
+                    States.DEFAULT -> {
+                        binding.progressBar.isInvisible = true
+                    }
+                    States.ERROR -> {
+                        binding.progressBar.isInvisible = true
+                    }
+                    States.NO_ARTISTS -> {
+                        binding.progressBar.isInvisible = true
+                    }
+                }
+            }
         }
     }
 
     private fun bindBookmarkButton(isBookmarked: Boolean) {
         val bookmarkImage = if (isBookmarked) R.drawable.ic_bookmark_selected else R.drawable.ic_bookmark_unselected
         binding.bookmarkButton.setImageResource(bookmarkImage)
+        binding.bookmarkButton.isVisible = true
         binding.bookmarkButton.setOnClickListener {
             viewModel.onBookmarkClicked()
         }
+    }
+
+    enum class States {
+        DEFAULT, LOADING, ERROR, NO_ARTISTS
     }
 
     companion object {

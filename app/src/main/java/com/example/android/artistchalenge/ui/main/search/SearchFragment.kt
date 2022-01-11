@@ -3,6 +3,7 @@ package com.example.android.artistchalenge.ui.main.search
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,8 +26,6 @@ class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
-    var mainActivityNavigationListener: MainActivityNavigationListener? = null
-
     lateinit var artistAdapter: SearchAdapter
 
     override fun onCreateView(
@@ -43,14 +42,14 @@ class SearchFragment : Fragment() {
 
         (activity?.application as ArtistChallengeApplication).getComponent().inject(this)
 
+        initStates()
         initResultsList()
         initSearchView()
-        initStates()
     }
 
     private fun initResultsList() {
         artistAdapter = SearchAdapter()
-        artistAdapter.clickListener = mainActivityNavigationListener
+        artistAdapter.clickListener = (activity as MainActivityNavigationListener)
         binding.searchResultList.adapter = artistAdapter
         viewModel.artists.observe(this) {
             if (it.isNullOrEmpty()) return@observe

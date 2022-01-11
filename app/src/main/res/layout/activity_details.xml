@@ -7,12 +7,22 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:scrollbars="none">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/artistImage"
@@ -26,6 +36,7 @@
                 android:id="@+id/bookmarkButton"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
+                android:visibility="gone"
                 android:padding="8dp"
                 android:foreground="?android:attr/selectableItemBackground"
                 android:src="@drawable/ic_bookmark_unselected"

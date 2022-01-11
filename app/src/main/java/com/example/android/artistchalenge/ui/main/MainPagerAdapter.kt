@@ -15,8 +15,8 @@ class MainPagerAdapter(
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> SearchFragment().apply { this.mainActivityNavigationListener = listener }
-            1 -> BookmarkFragment().apply { this.mainActivityNavigationListener = listener }
+            0 -> SearchFragment()
+            1 -> BookmarkFragment()
             else -> throw UnsupportedOperationException()
         }
     }

@@ -21,7 +21,6 @@ class BookmarkFragment : Fragment() {
     private var _binding: FragmentBookmarkBinding? = null
     private val binding get() = _binding!!
 
-    var mainActivityNavigationListener: MainActivityNavigationListener? = null
     lateinit var bookmarkAdapter: BookmarkAdapter
 
     override fun onCreateView(
@@ -40,7 +39,7 @@ class BookmarkFragment : Fragment() {
 
         binding.bookmarkList.layoutManager = GridLayoutManager(activity, GRID_COLUMN_AMOUNT)
         bookmarkAdapter = BookmarkAdapter()
-        bookmarkAdapter.clickListener = mainActivityNavigationListener
+        bookmarkAdapter.clickListener = (activity as MainActivityNavigationListener)
         binding.bookmarkList.adapter = bookmarkAdapter
 
         viewModel.loadBookmarks()
@@ -53,6 +52,4 @@ class BookmarkFragment : Fragment() {
     companion object {
         const val GRID_COLUMN_AMOUNT = 3
     }
-
-
 }

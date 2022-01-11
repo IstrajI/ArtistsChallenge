@@ -1,6 +1,7 @@
 package com.example.android.artistchalenge.ui.details
 
 import android.app.Application
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -13,14 +14,16 @@ import javax.inject.Inject
 import kotlin.math.roundToInt
 
 class DetailsViewModel @Inject constructor(
-    app: Application,
+    val app: Application,
     private val artistInteractor: ArtistInteractor
 ) : AndroidViewModel(app) {
     private val resources = getApplication<Application>().resources!!
     val artistUIModel = MutableLiveData<ArtistDetailsUIModel>()
     var artist: Artist? = null
+    val screenState = MutableLiveData(DetailsActivity.States.DEFAULT)
 
     fun loadArtistDetails(artistId: String) {
+        screenState.value = DetailsActivity.States.LOADING
         viewModelScope.launch {
             when (val artistDetailsOutcome = artistInteractor.loadDetailArtistInfo(artistId)) {
                 is Outcome.SuccessOutcome -> {
@@ -37,11 +40,16 @@ class DetailsViewModel @Inject constructor(
                         )
                     }
                 }
-                else -> {
-                    //show empty state
+                is Outcome.ErrorOutcome -> {
+                    Toast.makeText(
+                        app.applicationContext,
+                        artistDetailsOutcome.errorMessage,
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 
+            screenState.value = DetailsActivity.States.DEFAULT
         }
     }
 
@@ -80,10 +88,10 @@ class DetailsViewModel @Inject constructor(
         artistUIModel.value = artistUIModel.value
 
         viewModelScope.launch {
-            if (artistUIModel.value?.isBookmarked!!) {
+            if (artistUIModel.value?.isBookmarked == true) {
                 artistInteractor.saveArtistBookmark(artist!!)
             } else {
-                artistInteractor.removeArtistBookmark(artist?.bookmarkId!!)
+                artist?.bookmarkId?.let { artistInteractor.removeArtistBookmark(it) }
             }
         }
     }

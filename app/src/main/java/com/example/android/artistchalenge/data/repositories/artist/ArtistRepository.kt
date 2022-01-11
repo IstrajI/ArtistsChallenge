@@ -76,9 +76,17 @@ class ArtistRepository @Inject constructor(
     }
 
     fun saveArtist(artist: Artist) {
+        val isNewArtist = artistLocalDataSource.bookmarks.value.findLast {
+            it.mbid == artist.mbidId
+        } == null
+
+        if (!isNewArtist) return
+
         val artistDBModel = ArtistDBModel(
             mbid = artist.mbidId,
-            name = artist.name
+            name = artist.name,
+            type = artist.type,
+            image = artist.image
         )
 
         artistLocalDataSource.saveArtist(artistDBModel)
@@ -91,7 +99,8 @@ class ArtistRepository @Inject constructor(
                     mbidId = artist.mbid!!,
                     bookmarkId = artist.id,
                     name = artist.name!!,
-                    type = artist.type
+                    type = artist.type,
+                    image = artist.image
 
                 )
             }

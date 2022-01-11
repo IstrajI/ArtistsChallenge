@@ -23,7 +23,8 @@ class ArtistRemoteDataSource @Inject constructor(private val api: ApolloClient) 
                     after = Optional.presentIfNotNull(lastArtistSearchPageId)
                 )
             ).execute()
-            return response.dataAssertNoErrors.search?.artists
+
+            return response.data?.search?.artists
                 ?: throw NetworkErrorException("empty result")
         } catch (exception: ApolloException) {
             throw NetworkErrorException(exception.localizedMessage)
